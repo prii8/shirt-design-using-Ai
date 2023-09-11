@@ -12,9 +12,91 @@ import ColorPicker from '../componenets/ColorPicker'
 import AIPicker from '../componenets/AIPicker'
 import Tab from '../componenets/Tab'
 import CustomButton from '../componenets/CustomButton'
+import FilePicker from '../componenets/FilePicker'
 
 const Customizer = () => {
   const snap=useSnapshot(state);
+
+  const [file,setFile]=useState('');
+
+  const [prompt,setPrompt] =useState("");
+
+  const [generatingImage,setGeneratingImage]=useState(false)
+
+  const [activeEditorTab,setActiveEditorTab]=useState()
+  const [activeFilterTab,setActiveFilterTab]=useState({
+    logoShirt:true,
+    stylishShirt:false,
+  })
+
+  const generateTabContent=()=>
+  {
+    switch (activeEditorTab) {
+      case "colorpicker":
+        return <ColorPicker/>
+        break;
+      case "filepicker":
+        return <FilePicker
+        file={file}
+        setFile={setFile}
+        readFile={readFile}
+        />
+        break;
+
+      case "aipicker":
+        return <AIPicker/>
+        break;
+      default:
+        break;
+    }
+  }
+
+  const handleActiveFilterTab=(tabname)=>{
+    switch (tabname) {
+      case 'logoShirt':
+        state.isLogoTexture=!activeFilterTab[tabname];
+        
+        break;
+
+      case 'stylishShirt':
+        state.isFullTexture=!activeFilterTab[tabname];
+    
+      default:
+        state.isFullTexture=false;
+        state.isLogoTexture=true;
+    }
+  }
+
+  const handleDecals=(type,result) =>
+  {
+    const decaltype=DecalTypes[type];
+    console.log(decaltype);
+    console.log(state.logoDecal+"before");
+    console.log(state[decaltype.stateProperty]);
+
+    state[decaltype.stateProperty]=result;
+    console.log(state[decaltype.stateProperty]);
+    console.log(state.logoDecal+before);
+
+    console.log(activeFilterTab[decaltype.filterTabs])
+
+    if(!activeFilterTab[decaltype.filterTabs])
+    {
+      handleActiveFilterTab(decaltype.filterTab)
+    }
+  }
+
+  const readFile = (type) => {
+    reader(file)
+      .then((result) => {
+        handleDecals(type, result);
+        setActiveEditorTab("");
+      })
+  }
+
+
+
+
   return (
     <AnimatePresence>
        {!snap.intro &&(
@@ -25,13 +107,14 @@ const Customizer = () => {
         {...slideAnimation('left')}
         >
         <div className='flex items-center min-h-screen'>
-          <div className='editorable-container tabs'>
+          <div className='editortabs-container tabs'  {...slideAnimation('Right')}>
             {EditorTabs.map((tab)=>(
                 <Tab key={tab.name}
                 tab={tab}
-                handleClick={()=>{}}/>
+                handleClick={()=>{setActiveEditorTab(tab.name)}}/>
             ))
             }
+            {generateTabContent()}
           </div>
         </div>
 
@@ -43,7 +126,7 @@ const Customizer = () => {
         </motion.div>
 
 
-        <motion.div className='filtertabs-container'>
+        <motion.div className='filtertabs-container '  {...slideAnimation('up')}>
         {FilterTabs.map((tab)=>(
                 <Tab key={tab.name}
                 tab={tab}

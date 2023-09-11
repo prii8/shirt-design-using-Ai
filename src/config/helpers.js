@@ -17,6 +17,7 @@ export const reader = (file) =>
     fileReader.readAsDataURL(file);
   });
 
+
 export const getContrastingColor = (color) => {
   // Remove the '#' character if it exists
   const hex = color.replace("#", "");
