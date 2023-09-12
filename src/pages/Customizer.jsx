@@ -44,10 +44,62 @@ const Customizer = () => {
         break;
 
       case "aipicker":
-        return <AIPicker/>
+        return <AIPicker
+        prompt={prompt}
+        setPrompt={setPrompt}
+        generatingImage={generatingImage}
+        handleSubmit={handleSubmit}
+        />
         break;
       default:
+        return null;
         break;
+    }
+  }
+
+  const handleSubmit= async(type)=>{
+    if(!prompt) return alert("Please Enter a Prompt.");
+
+    try {
+
+      setGeneratingImage(true);
+      const response =await fetch('http://localhost:8080/api/v1/dalle',
+      {
+        method:"POST",
+        headers:{
+          'Content-type':'application/json'
+        },
+        body: JSON.stringify(
+          {
+            prompt,
+          }
+        )
+      })
+
+      const data=await response.json();
+
+      console.log(data);
+
+      handleDecals(type,`data:image/png;base64,${data.photo}`)
+
+      
+    } catch (error) {
+      alert(error);
+      
+    }
+    finally{
+      setGeneratingImage(false);
+      setActiveEditorTab("");
+    }
+  }
+
+  const handleDecals=(type,result) =>
+  {
+    const decaltype=DecalTypes[type];
+    state[decaltype.stateProperty]=result;
+    if(!activeFilterTab[decaltype.filterTabs])
+    {
+      handleActiveFilterTab(decaltype.filterTab)
     }
   }
 
@@ -65,26 +117,16 @@ const Customizer = () => {
         state.isFullTexture=false;
         state.isLogoTexture=true;
     }
+
+    setActiveFilterTab((prev)=>{
+      return{
+        ...prev,[tabname]:!prev[tabname]
+      }
+    })
+
   }
 
-  const handleDecals=(type,result) =>
-  {
-    const decaltype=DecalTypes[type];
-    console.log(decaltype);
-    console.log(state.logoDecal+"before");
-    console.log(state[decaltype.stateProperty]);
-
-    state[decaltype.stateProperty]=result;
-    console.log(state[decaltype.stateProperty]);
-    console.log(state.logoDecal+before);
-
-    console.log(activeFilterTab[decaltype.filterTabs])
-
-    if(!activeFilterTab[decaltype.filterTabs])
-    {
-      handleActiveFilterTab(decaltype.filterTab)
-    }
-  }
+  
 
   const readFile = (type) => {
     reader(file)
@@ -131,8 +173,8 @@ const Customizer = () => {
                 <Tab key={tab.name}
                 tab={tab}
                 isfilterTab
-                isActiveTab=""
-                handleClick={()=>{}}/>
+                isActiveTab={tab.name}
+                handleClick={()=>handleActiveFilterTab(tab.name)}/>
             ))
             }
         </motion.div>
@@ -146,3 +188,7 @@ const Customizer = () => {
 }
 
 export default Customizer
+
+
+
+

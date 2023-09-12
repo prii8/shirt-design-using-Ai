@@ -6,7 +6,7 @@ intro:true,
 color:'#EFBD48',
 isLogoTexture:true,
 isFullTexture:false,
-logoDecal:'./gautmi.png',
+logoDecal:'./threejs.png',
 fullDecal:'./react.png'
 
 });
