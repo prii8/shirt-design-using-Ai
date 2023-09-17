@@ -6,8 +6,13 @@ intro:true,
 color:'#EFBD48',
 isLogoTexture:true,
 isFullTexture:false,
+isPicTexture:false,
+isSmallTexture:false,
 logoDecal:'./threejs.png',
-fullDecal:'./react.png'
+fullDecal:'./texture2.jpg',
+picDecall:'./ai.jpg',
+smallDecal:'./react.png',
+
 
 });
 

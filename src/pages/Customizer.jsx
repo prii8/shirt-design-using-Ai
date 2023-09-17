@@ -6,7 +6,7 @@ import config from '../config/config'
 import state from '../store'
 import {download} from '../assets'
 import {downloadCanvasToImage,reader} from '../config/helpers'
-import {EditorTabs,FilterTabs,DecalTypes} from '../config/constants'
+import {EditorTabs,FilterTabs,DecalTypes,DownloadTabs} from '../config/constants'
 import { fadeAnimation,slideAnimation } from '../config/motion'
 import ColorPicker from '../componenets/ColorPicker'
 import AIPicker from '../componenets/AIPicker'
@@ -27,6 +27,8 @@ const Customizer = () => {
   const [activeFilterTab,setActiveFilterTab]=useState({
     logoShirt:true,
     stylishShirt:false,
+    pictureShirt:false,
+    smallLogoshirt:false,
   })
 
   const generateTabContent=()=>
@@ -97,6 +99,11 @@ const Customizer = () => {
   {
     const decaltype=DecalTypes[type];
     state[decaltype.stateProperty]=result;
+    if(type=='logo')
+    {
+      state.picDecall=result;
+      state.smallDecal=result;
+    }
     if(!activeFilterTab[decaltype.filterTabs])
     {
       handleActiveFilterTab(decaltype.filterTab)
@@ -107,15 +114,26 @@ const Customizer = () => {
     switch (tabname) {
       case 'logoShirt':
         state.isLogoTexture=!activeFilterTab[tabname];
-        
         break;
 
       case 'stylishShirt':
         state.isFullTexture=!activeFilterTab[tabname];
-    
+        break;
+
+      case 'pictureShirt':
+        state.isPicTexture=!activeFilterTab[tabname];
+        break;
+
+      case 'smallLogoshirt':
+        state.isSmallTexture=!activeFilterTab[tabname];
+        break;
+
       default:
         state.isFullTexture=false;
         state.isLogoTexture=true;
+        state.pictureShirt=false;
+        state.smallLogoshirt=false;
+        break;
     }
 
     setActiveFilterTab((prev)=>{
@@ -177,7 +195,18 @@ const Customizer = () => {
                 handleClick={()=>handleActiveFilterTab(tab.name)}/>
             ))
             }
+
+          {DownloadTabs.map((tab)=>(
+            <Tab
+             key={tab.name}
+            tab={tab}
+            handleClick={downloadCanvasToImage}/>
+          ))}
+
+          
         </motion.div>
+
+        
         </>
       )} 
 

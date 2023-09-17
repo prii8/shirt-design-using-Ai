@@ -5,6 +5,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 html {
   font-family: "Inter", sans-serif;
 }
@@ -24,11 +25,11 @@ html {
 }
 
 .home-content {
-  @apply flex-1 xl:justify-center justify-start flex flex-col gap-10;
+  @apply flex-1 xl:justify-center justify-start flex flex-col gap-[0.5rem];
 }
 
 .head-text {
-  @apply xl:text-[10rem] text-[6rem] xl:leading-[11rem] leading-[7rem] font-black text-black;
+  @apply xl:text-[6rem] text-[7rem] xl:leading-[7rem] leading-[9rem] font-black text-black;
 }
 
 .download-btn {

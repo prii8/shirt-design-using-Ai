@@ -37,6 +37,8 @@ const FilePicker = ({file,setFile,readFile}) => {
         handleClick={()=> readFile('full')}
         customStyles="text-xs py-1 px-1"
         />
+
+
       </div>
       </div></div>
   )
